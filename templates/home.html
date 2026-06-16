@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photography</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Google Font: Pacifico for Headings, Plus Jakarta Sans for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Roboto', Arial, sans-serif;
+            background: #101820;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .title,
+        .sub-title,
+        .heading .title {
+            font-family: 'Pacifico', cursive !important;
+            font-weight: 400;
+            line-height: 1.3;
+            letter-spacing: 1px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #fff;
+        }
+
+        .sub-title {
+            color: #ffd700;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 1rem;
+        }
+
+        .about .title,
+        .about h2 {
+            color: #111;
+        }
+
+        .heading .title {
+            font-size: 40px;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(90deg, #00dbde 0%, #fc00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            60% {
+                opacity: 0.7;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100vw);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100vw);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes flipIn {
+            0% {
+                opacity: 0;
+                transform: rotateY(90deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: rotateY(0);
+            }
+        }
+
+        @keyframes imageSlide {
+            0% {
+                opacity: 0;
+                transform: scale(.95) translateY(60px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .animate {
+            opacity: 0;
+        }
+
+        .animate.in-view {
+            opacity: 1;
+            animation: fadeInUp .9s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        .header.animate.in-view {
+            animation: slideInRight .9s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        .about.bg-light.animate.in-view {
+            animation: slideInLeft .95s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        .about-img .img.animate.in-view {
+            animation: flipIn 1.1s cubic-bezier(.86, 0, .07, 1) both;
+        }
+
+        .gallery.bg-dark.animate.in-view {
+            animation: fadeInUp 1s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        .gallery .grid-wrapper .image.animate.in-view {
+            animation: imageSlide .7s cubic-bezier(.7, .15, .3, 1) both;
+            transition: box-shadow 0.4s;
+            box-shadow: 0 8px 32px 0 #0002;
+        }
+
+        .gallery .grid-wrapper .image.animate img {
+            border-radius: 13px;
+            transition: transform .5s cubic-bezier(.7, .17, .26, 1), box-shadow .4s;
+            box-shadow: 0 2px 12px #0001;
+        }
+
+        .gallery .grid-wrapper .image.animate:hover img {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 6px 36px #0ff4;
+        }
+
+        .btn {
+            transition: background .3s, color .3s, box-shadow .3s;
+            border: 1px solid #00dbde;
+            color: #fff;
+            background: linear-gradient(90deg, #fc00ff 0%, #00dbde 100%);
+            border-radius: 25px;
+            font-family: 'Roboto', Arial, sans-serif;
+            box-shadow: 0 2px 24px #0ff2;
+        }
+
+        .btn:hover {
+            background: linear-gradient(-90deg, #fc00ff 0%, #00dbde 100%);
+            color: #222;
+            box-shadow: 0 8px 32px #fff3;
+        }
+
+        #lightbox-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.97);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            overflow: hidden;
+        }
+
+        #lightbox-modal img {
+            max-width: 95vw;
+            max-height: 92vh;
+            object-fit: contain;
+            border-radius: 8px;
+            background: transparent;
+            box-shadow: none;
+            display: block;
+        }
+
+        #lightbox-close,
+        #lightbox-prev,
+        #lightbox-next {
+            position: fixed;
+            color: white;
+            cursor: pointer;
+            z-index: 100000;
+            user-select: none;
+            transition: all 0.25s ease;
+        }
+
+        #lightbox-close {
+            top: 20px;
+            right: 25px;
+            font-size: 42px;
+        }
+
+        #lightbox-prev,
+        #lightbox-next {
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 60px;
+            padding: 10px 18px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        #lightbox-prev {
+            left: 25px;
+        }
+
+        #lightbox-next {
+            right: 25px;
+        }
+
+        #lightbox-prev:hover,
+        #lightbox-next:hover,
+        #lightbox-close:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        @media (max-width: 700px) {
+            #lightbox-modal img {
+                max-width: 97vw;
+                max-height: 72vh;
+            }
+
+            #lightbox-prev,
+            #lightbox-next {
+                display: none;
+            }
+
+            #lightbox-close {
+                top: 15px;
+                right: 14px;
+                font-size: 28px;
+            }
+        }
+
+        section,
+        .header {
+            transition: background 1.1s;
+            will-change: background;
+        }
+
+        .section-underline {
+            background: linear-gradient(90deg, #00dbde, #fc00ff);
+            width: 40px;
+            height: 4px;
+            border-radius: 3px;
+            margin: 10px auto 34px auto;
+            animation: fadeInUp .9s both;
+            display: block;
+        }
+
+        /* Responsive gallery grids */
+        .photo-section {
+            margin-top: 3rem;
+        }
+
+        .portrait-grid {
+            columns: 4 250px;
+            column-gap: 15px;
+        }
+
+        .landscape-grid {
+            columns: 3 350px;
+            column-gap: 15px;
+        }
+
+        .portrait-grid .image,
+        .landscape-grid .image {
+            break-inside: avoid;
+            margin-bottom: 15px;
+        }
+
+        .portrait-grid img,
+        .landscape-grid img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .portrait-grid img,
+        .landscape-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .portrait-grid img:hover,
+        .landscape-grid img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function revealOnScroll() {
+                const elements = document.querySelectorAll(".animate");
+                const windowHeight = window.innerHeight;
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    // Add 'in-view' if visible
+                    if (rect.top < windowHeight - 100 && rect.bottom > 100) {
+                        el.classList.add("in-view");
+                    } else {
+                        el.classList.remove("in-view");
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", revealOnScroll);
+            window.addEventListener("resize", revealOnScroll); // handles window resizing
+            revealOnScroll();
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo-wrapper">
+                <a class="logo" href="index.html"><strong></strong></a>
+            </div>
+            <ul class="navbar-links">
+                <li><a class="nav-link active" href="#">Home</a></li>
+
+                <li><a class="nav-link" href="#about">About Me</a></li>
+
+                <li><a class="nav-link" href="#favorite">Personal Fav</a></li>
+
+                <li><a class="nav-link" href="#works">My Works</a></li>
+
+                <li><a class="nav-link" href="#contact">Contact Me</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Hero Header -->
+    <!-- Header content -->
+    </div>
+    <div class="header animate">
+        <div class="container">
+            <div class="box">
+                <h4>Hello there!</h4>
+                <h1>I am Hemachandra</h1>
+                <h5>Welcome to my Photography Website!</h5>
+                <span class="section-underline"></span>
+                <p>
+                    I am a photographer dedicated to creating dreamscapes that capture the essence of subtlety and
+                    nuance.
+                    My work explores intricate shades and textures to evoke a sense of ethereal beauty. Each photograph
+                    is a
+                    journey through delicate gradations, offering a unique perspective on the world.
+                </p>
+                <a href="#" class="btn">HOME</a>
+                <a href="https://www.instagram.com/hemachandra_perigisetty?igsh=Y2xpMmFvb3UzbDQ0" class="btn insta-btn"
+                    target="_blank" rel="noopener" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- About -->
+    <section class="about bg-light animate" id="about">
+        <div class="container">
+            <div class="box">
+                <h2 class="title">ABOUT ME</h2>
+                <span class="section-underline" style="background:linear-gradient(90deg,#00dbde,#009ffd)"></span>
+                <p>
+                    "I love to pause the wild, happy, and real moments of my life, capturing their untold stories. I am
+                    dedicated to preserving these fleeting experiences, ensuring each moment’s unique narrative is told
+                    with
+                    authenticity and depth. Through my passion for photography, I strive to reveal the beauty and
+                    significance within every story I witness."
+                </p>
+                <ul>
+                    <li><i class="fa fa-check"></i><span>Natural Photography</span></li>
+                    <li><i class="fa fa-check"></i><span>Aesthetic Photos</span></li>
+                    <li><i class="fa fa-check"></i><span>Architectural Photos</span></li>
+                    <li><i class="fa fa-check"></i><span>Street Photography</span></li>
+                    <li><i class="fa fa-check"></i><span>Travel Photography</span></li>
+                </ul>
+                <div class="about-bottom">
+                    <img src="" alt="" class="signature" />
+                    <div class="about-name-wrapper">
+                        <div class="about-name-dark"></div>
+                        <div class="about-rol"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-img">
+                <div class="img animate">
+                    <img src="static\design\about image.jpg" alt="Portrait" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-photo animate" id="favorite">
+
+        <div class="featured-container">
+
+            <h2 class="favorite-title">
+                ✦A Personal Favorite✦
+            </h2>
+
+            <p>
+                One of my favorite photographs that reflects my style,
+                perspective, and passion for capturing meaningful moments.
+            </p>
+
+            <img src="/media/album/featured.jpg" alt="Featured Photo" class="favorite-image"
+                style="width:3100px; max-width:80%; height:auto; display:block; margin:auto; border-radius:15px;">
+
+        </div>
+
+    </section>
+
+    <!-- Works Gallery -->
+    <section class="gallery bg-dark animate" id="works">
+        <div class="heading">
+            <h2 class="title">My Works</h2>
+            <span class="section-underline"></span>
+        </div>
+
+        <!-- Portrait / Mobile Shots -->
+        <div class="container photo-section">
+            <h3 class="sub-title">Portrait / Mobile Shots</h3>
+            <div class="grid-wrapper portrait-grid">
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1671325.jpg"
+                        alt="Portrait 1" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1722206.jpg"
+                        alt="Portrait 2" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1738987.jpg"
+                        alt="Portrait 3" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1738988.jpg"
+                        alt="Portrait 4" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1738989.jpg"
+                        alt="Portrait 5" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1738990.jpg"
+                        alt="Portrait 6" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1738991.jpg"
+                        alt="Portrait 7" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-1738993.jpg"
+                        alt="Portrait 8" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/pexels-photo-3494648.jpg"
+                        alt="Portrait 9" />
+                </div>
+                <div class="image animate"><img src="../media/album/portraits/28.jpg" alt="Portrait 10" /></div>
+                <div class="image animate"><img src="../media/album/portraits/29.jpg" alt="Portrait 11" /></div>
+                <div class="image animate"><img src="../media/album/portraits/30.jpg" alt="Portrait 12" /></div>
+                <div class="image animate"><img src="../media/album/portraits/31.jpg" alt="Portrait 13" /></div>
+                <div class="image animate"><img src="../media/album/portraits/32.jpg" alt="Portrait 14" /></div>
+                <div class="image animate"><img src="../media/album/portraits/33.jpg" alt="Portrait 15" /></div>
+                <div class="image animate"><img src="../media/album/portraits/34.jpg" alt="Portrait 16" /></div>
+                <div class="image animate"><img src="../media/album/portraits/35.jpg" alt="Portrait 17" /></div>
+                <div class="image animate"><img src="../media/album/portraits/36.jpg" alt="Portrait 18" /></div>
+                <div class="image animate"><img src="../media/album/portraits/37.jpg" alt="Portrait 19" /></div>
+                <div class="image animate"><img src="../media/album/portraits/38.jpg" alt="Portrait 20" /></div>
+                <div class="image animate"><img src="../media/album/portraits/39.jpg" alt="Portrait 21" /></div>
+                <div class="image animate"><img src="../media/album/portraits/40.jpg" alt="Portrait 22" /></div>
+                <div class="image animate"><img src="../media/album/portraits/41.jpg" alt="Portrait 23" /></div>
+                <div class="image animate"><img src="../media/album/portraits/42.jpg" alt="Portrait 24" /></div>
+                <div class="image animate"><img src="../media/album/portraits/43.jpg" alt="Portrait 25" /></div>
+                <div class="image animate"><img src="../media/album/portraits/44.jpg" alt="Portrait 26" /></div>
+                <div class="image animate"><img src="../media/album/portraits/45.jpg" alt="Portrait 27" /></div>
+                <div class="image animate"><img src="../media/album/portraits/46.jpg" alt="Portrait 28" /></div>
+                <div class="image animate"><img src="../media/album/portraits/47.jpg" alt="Portrait 29" /></div>
+                <div class="image animate"><img src="../media/album/portraits/48.jpg" alt="Portrait 30" /></div>
+                <div class="image animate"><img src="../media/album/portraits/49.jpg" alt="Portrait 31" /></div>
+                <div class="image animate"><img src="../media/album/portraits/50.jpg" alt="Portrait 32" /></div>
+                <div class="image animate"><img src="../media/album/portraits/51.jpg" alt="Portrait 33" /></div>
+                <div class="image animate"><img src="../media/album/portraits/52.jpg" alt="Portrait 34" /></div>
+                <div class="image animate"><img src="../media/album/portraits/53.jpg" alt="Portrait 35" /></div>
+                <div class="image animate"><img src="../media/album/portraits/54.jpg" alt="Portrait 36" /></div>
+                <div class="image animate"><img src="../media/album/portraits/55.jpg" alt="Portrait 37" /></div>
+                <div class="image animate"><img src="../media/album/portraits/56.jpg" alt="Portrait 38" /></div>
+                <div class="image animate"><img src="../media/album/portraits/57.jpg" alt="Portrait 39" /></div>
+                <div class="image animate"><img src="../media/album/portraits/58.jpg" alt="Portrait 40" /></div>
+                <div class="image animate"><img src="../media/album/portraits/59.jpg" alt="Portrait 41" /></div>
+                <div class="image animate"><img src="../media/album/portraits/60.jpg" alt="Portrait 42" /></div>
+                <div class="image animate"><img src="../media/album/portraits/61.jpg" alt="Portrait 43" /></div>
+                <div class="image animate"><img src="../media/album/portraits/62.jpg" alt="Portrait 44" /></div>
+                <div class="image animate"><img src="../media/album/portraits/63.jpg" alt="Portrait 45" /></div>
+                <div class="image animate"><img src="../media/album/portraits/64.jpg" alt="Portrait 46" /></div>
+                <div class="image animate"><img src="../media/album/portraits/65.jpg" alt="Portrait 47" /></div>
+                <div class="image animate"><img src="../media/album/portraits/66.jpg" alt="Portrait 48" /></div>
+                <div class="image animate"><img src="../media/album/portraits/67.jpg" alt="Portrait 49" /></div>
+                <div class="image animate"><img src="../media/album/portraits/68.jpg" alt="Portrait 50" /></div>
+                <div class="image animate"><img src="../media/album/portraits/69.jpg" alt="Portrait 51" /></div>
+                <div class="image animate"><img src="../media/album/portraits/70.jpg" alt="Portrait 52" /></div>
+                <div class="image animate"><img src="../media/album/portraits/71.jpg" alt="Portrait 53" /></div>
+                <div class="image animate"><img src="../media/album/portraits/72.jpg" alt="Portrait 54" /></div>
+                <div class="image animate"><img src="../media/album/portraits/73.jpg" alt="Portrait 55" /></div>
+                <div class="image animate"><img src="../media/album/portraits/74.jpg" alt="Portrait 56" /></div>
+                <div class="image animate"><img src="../media/album/portraits/75.jpg" alt="Portrait 57" /></div>
+                <div class="image animate"><img src="../media/album/portraits/76.jpg" alt="Portrait 58" /></div>
+                <div class="image animate"><img src="../media/album/portraits/77.jpg" alt="Portrait 59" /></div>
+                <div class="image animate"><img src="../media/album/portraits/78.jpg" alt="Portrait 60" /></div>
+                <div class="image animate"><img src="../media/album/portraits/79.jpg" alt="Portrait 61" /></div>
+                <div class="image animate"><img src="../media/album/portraits/80.jpg" alt="Portrait 62" /></div>
+                <div class="image animate"><img src="../media/album/portraits/81.jpg" alt="Portrait 63" /></div>
+                <div class="image animate"><img src="../media/album/portraits/82.jpg" alt="Portrait 64" /></div>
+                <div class="image animate"><img src="../media/album/portraits/83.jpg" alt="Portrait 65" /></div>
+                <div class="image animate"><img src="../media/album/portraits/84.jpg" alt="Portrait 66" /></div>
+                <div class="image animate"><img src="../media/album/portraits/85.jpg" alt="Portrait 67" /></div>
+                <div class="image animate"><img src="../media/album/portraits/86.jpg" alt="Portrait 68" /></div>
+                <div class="image animate"><img src="../media/album/portraits/87.jpg" alt="Portrait 69" /></div>
+                <div class="image animate"><img src="../media/album/portraits/88.jpg" alt="Portrait 70" /></div>
+                <div class="image animate"><img src="../media/album/portraits/89.jpg" alt="Portrait 71" /></div>
+                <div class="image animate"><img src="../media/album/portraits/90.jpg" alt="Portrait 72" /></div>
+                <div class="image animate"><img src="../media/album/portraits/91.jpg" alt="Portrait 73" /></div>
+                <div class="image animate"><img src="../media/album/portraits/92.jpg" alt="Portrait 74" /></div>
+                <div class="image animate"><img src="../media/album/portraits/93.jpg" alt="Portrait 75" /></div>
+                <div class="image animate"><img src="../media/album/portraits/94.jpg" alt="Portrait 76" /></div>
+                <div class="image animate"><img src="../media/album/portraits/95.jpg" alt="Portrait 77" /></div>
+                <div class="image animate"><img src="../media/album/portraits/96.jpg" alt="Portrait 78" /></div>
+                <div class="image animate"><img src="../media/album/portraits/97.jpg" alt="Portrait 79" /></div>
+                <div class="image animate"><img src="../media/album/portraits/98.jpg" alt="Portrait 80" /></div>
+                <div class="image animate"><img src="../media/album/portraits/99.jpg" alt="Portrait 81" /></div>
+                <div class="image animate"><img src="../media/album/portraits/100.jpg" alt="Portrait 82" /></div>
+                <div class="image animate"><img src="../media/album/portraits/101.jpg" alt="Portrait 83" /></div>
+                {% for photo in portraits %}
+                <div class="image">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Landscape / Wide Shots -->
+        <div class="container photo-section">
+            <h3 class="sub-title">Landscape / Wide Shots</h3>
+            <div class="grid-wrapper landscape-grid">
+                <div class="image animate"><img src="../media/album/landscape/10.jpg" alt="Landscape 10" /></div>
+                <div class="image animate"><img src="../media/album/landscape/11.jpg" alt="Landscape 11" /></div>
+                <div class="image animate"><img src="../media/album/landscape/12.jpg" alt="Landscape 12" /></div>
+                <div class="image animate"><img src="../media/album/landscape/13.jpg" alt="Landscape 13" /></div>
+                <div class="image animate"><img src="../media/album/landscape/14.jpg" alt="Landscape 14" /></div>
+                <div class="image animate"><img src="../media/album/landscape/15.jpg" alt="Landscape 15" /></div>
+                <div class="image animate"><img src="../media/album/landscape/16.jpg" alt="Landscape 16" /></div>
+                <div class="image animate"><img src="../media/album/landscape/17.jpg" alt="Landscape 17" /></div>
+                <div class="image animate"><img src="../media/album/landscape/18.jpg" alt="Landscape 18" /></div>
+                <div class="image animate"><img src="../media/album/landscape/19.jpg" alt="Landscape 19" /></div>
+                <div class="image animate"><img src="../media/album/landscape/20.jpg" alt="Landscape 20" /></div>
+                <div class="image animate"><img src="../media/album/landscape/21.jpg" alt="Landscape 21" /></div>
+                <div class="image animate"><img src="../media/album/landscape/22.jpg" alt="Landscape 22" /></div>
+                <div class="image animate"><img src="../media/album/landscape/23.jpg" alt="Landscape 23" /></div>
+                <div class="image animate"><img src="../media/album/landscape/24.jpg" alt="Landscape 24" /></div>
+                <div class="image animate"><img src="../media/album/landscape/25.jpg" alt="Landscape 25" /></div>
+                <div class="image animate"><img src="../media/album/landscape/26.jpg" alt="Landscape 26" /></div>
+                <div class="image animate"><img src="../media/album/landscape/27.jpg" alt="Landscape 27" /></div>
+                {% for photo in landscapes %}
+                <div class="image">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </section>
+
+    <div class="end-divider">
+        <div class="line"></div>
+
+        <h2 class="end-text">✦────────────────────── THE END ────────────────────✦</h2>
+
+        <div class="line"></div>
+    </div>
+
+    <footer class="footer animate" id="contact">
+        <div class="newsletter">
+            <div class="container">
+                <div class="box"></div>
+                <div class="form">
+                    <form></form>
+                </div>
+            </div>
+        </div>
+        <div class="second-footer">
+            <div class="container">
+                <div class="box">
+                    <div class="logo-wrapper">
+                        <a class="logo" href="index.html"><strong></strong> Hemachandra</a>
+                    </div>
+                    <div class="text">
+                        <p>Every photo is a story. You don’t need words to understand it.</p>
+                    </div>
+                </div>
+                <div class="box">
+                    <h3 class="title">Contact Me</h3>
+                    <ul>
+                        <li>
+                            <i class="fa fa-phone"></i>
+                            <span>+919989476227</span>
+                        </li>
+                        <li>
+                            <i class="fa fa-at"></i>
+                            <span>hemachandrajoy176@gmail.com</span>
+                        </li>
+                        <li>
+                            <i class="fab fa-instagram"></i>
+                            <span>
+                                <a href="https://www.instagram.com/hemachandra_perigisetty" target="_blank"
+                                    rel="noopener" style="color:#e1306c; text-decoration:none; font-weight:500;"
+                                    aria-label="Instagram">
+                                    @Hemachandra
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" style="display: none;">
+        <span id="lightbox-close">&times;</span>
+        <span id="lightbox-prev">&#10094;</span>
+        <img id="lightbox-img" src="" alt="Full Size" />
+        <span id="lightbox-next">&#10095;</span>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const galleryImages = Array.from(document.querySelectorAll(".grid-wrapper img"));
+            const modal = document.getElementById("lightbox-modal");
+            const modalImg = document.getElementById("lightbox-img");
+            const closeBtn = document.getElementById("lightbox-close");
+            const nextBtn = document.getElementById("lightbox-next");
+            const prevBtn = document.getElementById("lightbox-prev");
+            let currentIndex = 0;
+            let animating = false;
+
+            function animateModalImg(direction) {
+                modalImg.style.transition = "none";
+                modalImg.style.opacity = "0";
+                modalImg.style.transform = direction === "left" ? "translateX(-50px) scale(.96)" : "translateX(50px) scale(.96)";
+                setTimeout(() => {
+                    modalImg.style.transition = "all .45s cubic-bezier(.6,0,.4,1)";
+                    modalImg.style.opacity = "1";
+                    modalImg.style.transform = "translateX(0) scale(1)";
+                }, 15);
+            }
+
+            function openModal(index) {
+
+                document.querySelector('.navbar').style.display = 'none';
+
+                currentIndex = index;
+                modal.classList.add('show');
+                modalImg.src = galleryImages[index].src;
+                modalImg.style.opacity = "1";
+                modalImg.style.transform = "translateX(0) scale(1)";
+                modal.style.display = "flex";
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeModal() {
+
+                document.querySelector('.navbar').style.display = '';
+
+                modal.classList.remove('show');
+                modal.style.display = "none";
+                modalImg.src = "";
+                document.body.style.overflow = "";
+            }
+
+            function showNext() {
+                if (animating) return;
+                animating = true;
+                currentIndex = (currentIndex + 1) % galleryImages.length;
+                modalImg.style.opacity = "0";
+                setTimeout(() => {
+                    modalImg.src = galleryImages[currentIndex].src;
+                    animateModalImg("right");
+                    animating = false;
+                }, 150);
+            }
+
+            function showPrev() {
+                if (animating) return;
+                animating = true;
+                currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                modalImg.style.opacity = "0";
+                setTimeout(() => {
+                    modalImg.src = galleryImages[currentIndex].src;
+                    animateModalImg("left");
+                    animating = false;
+                }, 150);
+            }
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            modal.addEventListener("touchstart", (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            modal.addEventListener("touchend", (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+
+                if (touchEndX < touchStartX - 50) {
+                    showNext();
+                }
+
+                if (touchEndX > touchStartX + 50) {
+                    showPrev();
+                }
+            });
+
+            galleryImages.forEach((img, i) => {
+                img.style.cursor = "zoom-in";
+                img.addEventListener("click", () => openModal(i));
+            });
+            nextBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                showNext();
+            });
+            prevBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                showPrev();
+            });
+            closeBtn.addEventListener("click", closeModal);
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (modal.style.display === "flex") {
+                    if (e.key === "Escape") closeModal();
+                    if (e.key === "ArrowRight") showNext();
+                    if (e.key === "ArrowLeft") showPrev();
+                }
+            });
+        });
+    </script>
+    <script>
+
+        window.addEventListener('scroll', () => {
+
+            document.querySelectorAll(
+                '.animate-favorite, .favorite-image'
+            ).forEach(el => {
+
+                const top = el.getBoundingClientRect().top;
+
+                if (top < window.innerHeight - 100) {
+
+                    el.classList.add('show');
+                }
+
+            });
+
+        });
+
+        window.dispatchEvent(new Event('scroll'));
+
+    </script>
+    <script>
+        window.addEventListener('scroll', () => {
+
+            const tag = document.querySelector('.favorite-tag');
+
+            if (!tag) return;
+
+            const top = tag.getBoundingClientRect().top;
+
+            if (top < window.innerHeight - 100) {
+                tag.classList.add('show');
+            }
+
+        });
+    </script>
+</body>
+
+</html>
