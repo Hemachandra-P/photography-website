@@ -1088,7 +1088,7 @@ body {
 .end-text {
   font-family: 'Great Vibes', cursive !important;
 
-  font-size: 100px !important;
+  font-size: 50px !important;
 
   color: #fff !important;
 
@@ -1209,4 +1209,10 @@ body {
 .favorite-tag.show {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
 }
