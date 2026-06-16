@@ -1261,3 +1261,26 @@ body {
   }
 
 }
+
+.load-more-btn {
+  display: block;
+  margin: 30px auto;
+  padding: 12px 30px;
+
+  background: #fff;
+  color: #111;
+
+  border: none;
+  border-radius: 30px;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.load-more-btn:hover {
+  transform: translateY(-2px);
+}
