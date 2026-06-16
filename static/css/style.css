@@ -1073,38 +1073,31 @@ body {
 }
 
 .end-divider {
-  width: 100% !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  gap: 40px !important;
+  gap: 30px;
 
-  padding: 60px 40px !important;
-
-  text-align: center !important;
+  width: 100%;
+  padding: 50px 40px;
 }
 
 .end-text {
-  font-family: 'Great Vibes', cursive !important;
+  font-family: 'Great Vibes', cursive;
+  font-size: 42px;
+  color: white;
 
-  font-size: 50px !important;
-
-  color: #fff !important;
-
-  margin: 0 !important;
-
-  line-height: 1 !important;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .line {
-  flex: 1 !important;
+  flex: 1;
+  max-width: 350px;
 
-  max-width: 400px !important;
-
-  height: 1px !important;
-
-  background: white !important;
+  height: 2px;
+  background: white;
 }
 
 .favorite-tag {
@@ -1215,4 +1208,56 @@ html,
 body {
   max-width: 100%;
   overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+
+  .navbar-links {
+    gap: 10px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .navbar-links a {
+    font-size: 12px !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .about-content,
+  .about-row,
+  .about-container {
+    flex-direction: column !important;
+    text-align: center;
+  }
+
+  .about-img img {
+    width: 220px !important;
+    margin: 20px auto !important;
+    display: block;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .featured-photo img {
+    width: 95% !important;
+    max-width: 95% !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .end-text {
+    font-size: 26px !important;
+  }
+
+  .line {
+    max-width: 80px !important;
+  }
+
 }
