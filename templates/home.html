@@ -583,7 +583,7 @@
         <!-- Landscape / Wide Shots -->
         <div class="container photo-section">
             <h3 class="sub-title">Landscape / Wide Shots</h3>
-            <div class="grid-wrapper landscape-grid">
+            <div class="grid-wrapper landscape-grid" id="landscapeGallery">
                 <div class="image animate"><img src="../media/album/landscape/10.jpg" alt="Landscape 10" /></div>
                 <div class="image animate"><img src="../media/album/landscape/11.jpg" alt="Landscape 11" /></div>
                 <div class="image animate"><img src="../media/album/landscape/12.jpg" alt="Landscape 12" /></div>
@@ -608,6 +608,9 @@
                 </div>
                 {% endfor %}
             </div>
+            <button id="showMoreLandscapes" class="load-more-btn">
+                Show More
+            </button>
         </div>
 
     </section>
@@ -844,6 +847,43 @@
             btn.addEventListener("click", () => {
 
                 visible += 12;
+
+                photos.forEach((photo, index) => {
+
+                    if (index < visible) {
+                        photo.style.display = "";
+                    }
+
+                });
+
+                if (visible >= photos.length) {
+                    btn.style.display = "none";
+                }
+
+            });
+
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const photos =
+                document.querySelectorAll("#landscapeGallery .image");
+
+            const btn =
+                document.getElementById("showMoreLandscapes");
+
+            let visible = 5;
+
+            photos.forEach((photo, index) => {
+                if (index >= visible) {
+                    photo.style.display = "none";
+                }
+            });
+
+            btn.addEventListener("click", () => {
+
+                visible += 5;
 
                 photos.forEach((photo, index) => {
 
